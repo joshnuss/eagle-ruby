@@ -4,13 +4,13 @@ module Eagle
   class Grid
     attr_accessor :distance, :unit, :alternate_unit, :alternate_unit_distanceance, :display, :style, :multiple, :alternate_distance, :unit_distance, :alternate_unit_distance
 
-    def load(node)
+    def parse(node)
       @distance                = node['distance'].to_f
       @unit_distance           = node['unitdist']
       @unit                    = node['unit']
       @style                   = node['style']
       @multiple                = node['multiple'].to_f
-      @display                 = node['display']
+      @display                 = node['display'] == 'yes'
       @alternate_distance      = node['altdistance'].to_f
       @alternate_unit_distance = node['altunitdist']
       @alternate_unit          = node['altunit']
@@ -18,12 +18,24 @@ module Eagle
   end
 
   class Layer
+    attr_accessor :number, :name, :color, :fill, :visible, :active
+
+    def parse(node)
+      @number  = node[:number].to_i
+      @name    = node[:name]
+      @color   = node[:color].to_i
+      @fill    = node[:fill].to_i
+      @visible = node[:visible] == 'yes'
+      @active  = node[:active] == 'yes'
+    end
   end
 
   class Layers < Array
-    def load(nodes)
+    def parse(nodes)
       nodes.each do |node|
-        push(Layer.new)
+        layer = Layer.new
+        layer.parse(node)
+        push(layer)
       end
     end
   end
@@ -32,14 +44,14 @@ module Eagle
     attr_accessor :version
     attr_reader :grid, :layers
 
-    def self.load(xml)
+    def self.parse(xml)
       document = Nokogiri::XML::Document.parse(xml)
       drawing = Drawing.new
       eagle = document.xpath('/eagle').first
 
       drawing.version = eagle['version']
-      drawing.grid.load(eagle.xpath('drawing/grid').first)
-      drawing.layers.load(eagle.xpath('drawing/layers/layer'))
+      drawing.grid.parse(eagle.xpath('drawing/grid').first)
+      drawing.layers.parse(eagle.xpath('drawing/layers/layer'))
 
       drawing
     end
@@ -103,7 +115,7 @@ describe Eagle::Drawing do
   EOS
 
   context "parsing" do
-    let(:document) { Eagle::Drawing.load(XML) }
+    let(:document) { Eagle::Drawing.parse(XML) }
     subject { document }
 
     its(:version) { should == '5.91' }
@@ -116,7 +128,7 @@ describe Eagle::Drawing do
       its(:unit) { should == 'inch' }
       its(:style) { should == 'lines' }
       its(:multiple) { should == 1 }
-      its(:display) { should == 'no' }
+      its(:display) { should == false }
       its(:alternate_distance) { should == 0.01 }
       its(:alternate_unit_distance) { should == 'inch' }
       its(:alternate_unit) { should == 'inch' }
@@ -126,6 +138,17 @@ describe Eagle::Drawing do
       subject { document.layers }
 
       its(:count) { should == 8 }
+
+      context "first layer" do
+        subject { document.layers.first }
+
+        its(:number) { should == 91 }
+        its(:name) { should == 'Nets' }
+        its(:color) { should == 2 }
+        its(:fill) { should == 1 }
+        its(:visible) { should == true }
+        its(:active) { should == true }
+      end
     end
   end
 end
