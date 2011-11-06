@@ -17,9 +17,20 @@ module Eagle
     end
   end
 
+  class Layer
+  end
+
+  class Layers < Array
+    def load(nodes)
+      nodes.each do |node|
+        push(Layer.new)
+      end
+    end
+  end
+
   class Drawing
     attr_accessor :version
-    attr_reader :grid
+    attr_reader :grid, :layers
 
     def self.load(xml)
       document = Nokogiri::XML::Document.parse(xml)
@@ -28,12 +39,14 @@ module Eagle
 
       drawing.version = eagle['version']
       drawing.grid.load(eagle.xpath('drawing/grid').first)
+      drawing.layers.load(eagle.xpath('drawing/layers/layer'))
 
       drawing
     end
 
     def initialize
-      @grid = Grid.new
+      @grid   = Grid.new
+      @layers = Layers.new
     end
   end
 end
@@ -109,5 +122,10 @@ describe Eagle::Drawing do
       its(:alternate_unit) { should == 'inch' }
     end
 
+    context "layers" do
+      subject { document.layers }
+
+      its(:count) { should == 8 }
+    end
   end
 end
