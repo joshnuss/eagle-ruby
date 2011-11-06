@@ -3,6 +3,18 @@ require 'nokogiri'
 module Eagle
   class Grid
     attr_accessor :distance, :unit, :alternate_unit, :alternate_unit_distanceance, :display, :style, :multiple, :alternate_distance, :unit_distance, :alternate_unit_distance
+
+    def load(node)
+      @distance                = node['distance'].to_f
+      @unit_distance           = node['unitdist']
+      @unit                    = node['unit']
+      @style                   = node['style']
+      @multiple                = node['multiple'].to_f
+      @display                 = node['display']
+      @alternate_distance      = node['altdistance'].to_f
+      @alternate_unit_distance = node['altunitdist']
+      @alternate_unit          = node['altunit']
+    end
   end
 
   class Drawing
@@ -13,19 +25,9 @@ module Eagle
       document = Nokogiri::XML::Document.parse(xml)
       drawing = Drawing.new
       eagle = document.xpath('/eagle').first
-      grid = eagle.xpath('//grid').first
 
       drawing.version = eagle['version']
-
-      drawing.grid.distance = grid['distance'].to_f
-      drawing.grid.unit_distance = grid['unitdist']
-      drawing.grid.unit = grid['unit']
-      drawing.grid.style = grid['style']
-      drawing.grid.multiple = grid['multiple'].to_f
-      drawing.grid.display = grid['display']
-      drawing.grid.alternate_distance = grid['altdistance'].to_f
-      drawing.grid.alternate_unit_distance = grid['altunitdist']
-      drawing.grid.alternate_unit = grid['altunit']
+      drawing.grid.load(eagle.xpath('drawing/grid').first)
 
       drawing
     end
@@ -89,7 +91,6 @@ describe Eagle::Drawing do
 
   context "parsing" do
     let(:document) { Eagle::Drawing.load(XML) }
-
     subject { document }
 
     its(:version) { should == '5.91' }
