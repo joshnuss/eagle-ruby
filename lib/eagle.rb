@@ -1,4 +1,5 @@
 require 'nokogiri'
 require 'eagle/grid'
 require 'eagle/layer'
+require 'eagle/part'
 require 'eagle/drawing'

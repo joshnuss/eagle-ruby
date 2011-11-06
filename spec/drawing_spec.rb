@@ -24,17 +24,33 @@ describe Eagle::Drawing do
     context "layers" do
       subject { document.layers }
 
-      its(:count) { should == 8 }
+      its(:count) { should == 45 }
 
       context "first layer" do
         subject { document.layers.first }
 
-        its(:number) { should == 91 }
-        its(:name) { should == 'Nets' }
-        its(:color) { should == 2 }
+        its(:number) { should == 1 }
+        its(:name) { should == 'Top' }
+        its(:color) { should == 4 }
         its(:fill) { should == 1 }
-        its(:visible) { should == true }
-        its(:active) { should == true }
+        its(:visible) { should == false }
+        its(:active) { should == false }
+      end
+    end
+
+    context "parts" do
+      subject { document.parts }
+
+      its(:count) { should == 2 }
+
+      context "first part" do
+        subject { document.parts[1] }
+
+        its(:name) { should == 'IC1' }
+        its(:library) { should == '74xx-us' }
+        its(:deviceset) { should == '74*595' }
+        its(:device) { should == 'D' }
+        its(:technology) { should == 'LS' }
       end
     end
   end
