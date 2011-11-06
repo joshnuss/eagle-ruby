@@ -1,3 +1,5 @@
+require 'eagle'
+
 RSpec.configure do |config|
   # == Mock Framework
   #
