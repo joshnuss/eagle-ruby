@@ -2,7 +2,7 @@ require 'nokogiri'
 
 module Eagle
   class Grid
-    attr_accessor :distance
+    attr_accessor :distance, :unit, :alternate_unit, :alternate_unit_distanceance, :display, :style, :multiple, :alternate_distance, :unit_distance, :alternate_unit_distance
   end
 
   class Drawing
@@ -16,7 +16,16 @@ module Eagle
       grid = eagle.xpath('//grid').first
 
       drawing.version = eagle['version']
+
       drawing.grid.distance = grid['distance'].to_f
+      drawing.grid.unit_distance = grid['unitdist']
+      drawing.grid.unit = grid['unit']
+      drawing.grid.style = grid['style']
+      drawing.grid.multiple = grid['multiple'].to_f
+      drawing.grid.display = grid['display']
+      drawing.grid.alternate_distance = grid['altdistance'].to_f
+      drawing.grid.alternate_unit_distance = grid['altunitdist']
+      drawing.grid.alternate_unit = grid['altunit']
 
       drawing
     end
@@ -87,7 +96,16 @@ describe Eagle::Drawing do
     
     context "grid" do
       subject { document.grid }
+
       its(:distance) { should == 0.1 }
+      its(:unit_distance) { should == 'inch' }
+      its(:unit) { should == 'inch' }
+      its(:style) { should == 'lines' }
+      its(:multiple) { should == 1 }
+      its(:display) { should == 'no' }
+      its(:alternate_distance) { should == 0.01 }
+      its(:alternate_unit_distance) { should == 'inch' }
+      its(:alternate_unit) { should == 'inch' }
     end
 
   end
