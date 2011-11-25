@@ -49,7 +49,7 @@ describe Eagle::Drawing do
 
       its(:count) { should == 2 }
 
-      context "first part" do
+      context "second part" do
         subject { document.parts[1] }
 
         its(:name) { should == 'IC1' }
@@ -59,5 +59,12 @@ describe Eagle::Drawing do
         its(:technology) { should == 'LS' }
       end
     end
+
+    context "sheets" do
+      subject { document.sheets }
+
+      its(:count) { should == 1}
+    end
+
   end
 end
