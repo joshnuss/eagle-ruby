@@ -1,3 +1,9 @@
+PATH
+  remote: .
+  specs:
+    eagle_ruby (0.0.1)
+      nokogiri
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -42,10 +48,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  eagle_ruby!
   guard
   guard-rspec
   libnotify
-  nokogiri
   rb-fchange
   rb-fsevent
   rb-inotify
