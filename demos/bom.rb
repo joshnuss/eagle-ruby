@@ -1,24 +1,24 @@
 =begin
-Generates a bill of materials
 
-Usage: 
+  BOM Generator - Generates a bill of materials from an EagleCAD schematic
 
-$> ruby demos/bom.rb /path/to/schematic.sch > bom.csv
+  Usage: 
+
+  $> ruby demos/bom.rb /path/to/schematic.sch > bom.csv
+
 =end
 
-$: << File.expand_path(File.dirname(__FILE__) + '/../lib')
-require 'eagle'
 require 'csv'
+require_relative '../lib/eagle'
 
-drawing = Eagle::Drawing.parse(File.read(ARGV[0]))
-groups = {}
-drawing.parts.each do |part|
-  part_name = "#{part.deviceset} #{part.device}"
-  (groups[part_name] ||= []) << part
-end
+xml         = File.read(ARGV.first)
+drawing     = Eagle::Drawing.parse(xml)
+part_groups = drawing.parts.group_by {|part| "#{part.deviceset}-#{part.device}"}
 
-puts CSV.generate_line(['Part', 'Library', 'Quantity', 'Names'])
+CSV do |csv|
+  csv << ['Quantity', 'Part', 'Names', 'Notes']
 
-groups.each do |part_name, parts|
-  puts CSV.generate_line([part_name, parts.first.library, parts.count, parts.map(&:name).join(', ')])
+  part_groups.each do |part_name, parts|
+    csv << [parts.count, part_name, parts.map(&:name).join(', '), '']
+  end
 end

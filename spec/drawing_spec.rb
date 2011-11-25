@@ -6,7 +6,7 @@ describe Eagle::Drawing do
     subject { document }
 
     its(:version) { should == '5.91' }
-    
+
     context "grid" do
       subject { document.grid }
 
@@ -19,6 +19,12 @@ describe Eagle::Drawing do
       its(:alternate_distance) { should == 0.01 }
       its(:alternate_unit_distance) { should == 'inch' }
       its(:alternate_unit) { should == 'inch' }
+    end
+
+    context "settings" do
+      specify { document.settings[:alwaysvectorfont].should == 'no' }
+      specify { document.settings['alwaysvectorfont'].should == 'no' }
+      specify { document.settings[:verticaltext].should == 'up' }
     end
 
     context "layers" do
@@ -43,7 +49,7 @@ describe Eagle::Drawing do
 
       its(:count) { should == 2 }
 
-      context "first part" do
+      context "second part" do
         subject { document.parts[1] }
 
         its(:name) { should == 'IC1' }
@@ -53,5 +59,12 @@ describe Eagle::Drawing do
         its(:technology) { should == 'LS' }
       end
     end
+
+    context "sheets" do
+      subject { document.sheets }
+
+      its(:count) { should == 1}
+    end
+
   end
 end
