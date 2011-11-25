@@ -1,6 +1,12 @@
 module Eagle
   class Instance
+    attr_accessor :part, :gate, :x, :y
+
     def parse(node)
+      @part = node['part']
+      @gate = node['gate']
+      @x    = node['x'].to_f
+      @y    = node['y'].to_f
     end
   end
 
