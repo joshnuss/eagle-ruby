@@ -17,6 +17,7 @@ module Eagle
       nodes.each do |node|
         layer = Layer.new
         layer.parse(node)
+
         push(layer)
       end
     end

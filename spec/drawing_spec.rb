@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Eagle::Drawing do
+describe Drawing do
   context "parsing" do
-    let(:document) { Eagle::Drawing.parse(File.read(File.dirname(__FILE__) + '/sample.sch.xml')) }
+    let(:document) { Drawing.parse(SAMPLE_XML) }
     subject { document }
 
     its(:version) { should == '5.91' }

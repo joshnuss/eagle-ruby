@@ -1,5 +1,9 @@
 require 'eagle'
 
+include Eagle
+
+SAMPLE_XML = File.read(File.dirname(__FILE__) + '/sample.sch.xml')
+
 RSpec.configure do |config|
   # == Mock Framework
   #
