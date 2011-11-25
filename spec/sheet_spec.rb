@@ -10,4 +10,5 @@ describe Sheet do
   before { sheet.parse(xml.xpath('//drawing/schematic/sheets/sheet')) }
 
   specify { sheet.should have(2).instances }
+  specify { sheet.should have(2).nets }
 end
