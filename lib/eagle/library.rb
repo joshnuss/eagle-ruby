@@ -1,6 +1,6 @@
 module Eagle
   class Library
-    attr_accessor :name, :description, :packages
+    attr_accessor :name, :description, :packages, :devicesets
 
     def initialize
       @packages = Packages.new
