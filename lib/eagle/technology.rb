@@ -1,9 +1,14 @@
 module Eagle
   class Technology
-    attr_accessor :name
+    attr_accessor :name, :attributes
+
+    def initialize
+      @attributes = Attributes.new
+    end
 
     def parse(node)
       @name       = node[:name]
+      @attributes.parse(node.xpath('./attribute'))
     end
   end
 
