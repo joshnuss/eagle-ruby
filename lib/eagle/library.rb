@@ -9,7 +9,7 @@ module Eagle
 
     def parse(node)
       @name        = node[:name]
-      @description = node.xpath('description')
+      @description = node.xpath('description').text
       @packages.parse(node.xpath('./packages/package'))
       @devicesets.parse(node.xpath('./devicesets/deviceset'))
     end

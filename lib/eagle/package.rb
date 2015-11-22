@@ -4,7 +4,7 @@ module Eagle
 
     def parse(node)
       @name        = node[:name]
-      @description = node.xpath('description')
+      @description = node.xpath('description').text
     end
   end
 

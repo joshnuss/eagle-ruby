@@ -10,7 +10,7 @@ module Eagle
       @name        = node[:name]
       @prefix      = node[:prefix]
       @uservalue   = node[:uservalue]
-      @description = node.xpath('description')
+      @description = node.xpath('description').text
       @devices.parse(node.xpath('./devices/device'))
     end
   end
