@@ -1,15 +1,16 @@
 module Eagle
   class DeviceSet
-    attr_accessor :name, :prefix, :uservalue, :devices
+    attr_accessor :name, :prefix, :description, :uservalue, :devices
 
     def initialize
       @devices    = Devices.new
     end
 
     def parse(node)
-      @name       = node[:name]
-      @prefix     = node[:prefix]
-      @uservalue  = node[:uservalue]
+      @name        = node[:name]
+      @prefix      = node[:prefix]
+      @uservalue   = node[:uservalue]
+      @description = node.xpath('description').text
       @devices.parse(node.xpath('./devices/device'))
     end
   end
